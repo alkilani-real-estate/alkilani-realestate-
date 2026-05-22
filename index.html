@@ -8,7 +8,6 @@
 <!-- Firebase v8 -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
@@ -63,6 +62,9 @@ header {
   font-family: "Cairo", sans-serif;
   font-size: 14px;
   transition: 0.25s;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
 }
 .btn:hover {
   background: #d4af37;
@@ -83,6 +85,22 @@ header {
 .btn-small {
   padding: 5px 12px;
   font-size: 12px;
+}
+.btn-whatsapp {
+  border-color: #25d366;
+  color: #25d366;
+}
+.btn-whatsapp:hover {
+  background: #25d366;
+  color: #fff;
+}
+.btn-call {
+  border-color: #3498db;
+  color: #3498db;
+}
+.btn-call:hover {
+  background: #3498db;
+  color: #fff;
 }
 .hero {
   text-align: center;
@@ -128,6 +146,12 @@ header {
   display: flex;
   gap: 5px;
   margin-top: 8px;
+  flex-wrap: wrap;
+}
+.contact-actions {
+  display: flex;
+  gap: 5px;
+  margin-top: 8px;
 }
 .panel {
   background: #111;
@@ -156,54 +180,6 @@ header {
   min-height: 70px;
   resize: vertical;
 }
-/* رفع الصور */
-.file-upload {
-  position: relative;
-  display: inline-block;
-  width: 100%;
-}
-.file-upload input[type="file"] {
-  position: absolute;
-  opacity: 0;
-  width: 100%;
-  height: 100%;
-  cursor: pointer;
-}
-.file-upload-label {
-  display: block;
-  padding: 12px;
-  border: 2px dashed #444;
-  border-radius: 8px;
-  text-align: center;
-  color: #888;
-  transition: 0.2s;
-}
-.file-upload:hover .file-upload-label {
-  border-color: #d4af37;
-  color: #d4af37;
-}
-.preview-img {
-  max-width: 200px;
-  max-height: 150px;
-  border-radius: 8px;
-  margin-top: 10px;
-  display: none;
-}
-.progress-bar {
-  width: 100%;
-  height: 6px;
-  background: #222;
-  border-radius: 3px;
-  margin-top: 10px;
-  overflow: hidden;
-  display: none;
-}
-.progress-fill {
-  height: 100%;
-  background: #d4af37;
-  width: 0%;
-  transition: width 0.3s;
-}
 footer {
   text-align: center;
   padding: 20px;
@@ -212,7 +188,7 @@ footer {
   margin-top: 30px;
 }
 
-/* أزرار التواصل */
+/* أزرار التواصل الرئيسية */
 .contact-bar {
   margin-top: 25px;
   display: flex;
@@ -230,6 +206,7 @@ footer {
   align-items: center;
   transition: 0.25s;
   box-shadow: 0 0 8px rgba(212,175,55,0.25);
+  text-decoration: none;
 }
 .contact-icon-btn:hover {
   background: #d4af37;
@@ -320,15 +297,43 @@ footer {
 .toast.show {
   opacity: 1;
 }
+
+/* Music indicator */
+.music-indicator {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: rgba(212,175,55,0.2);
+  border: 1px solid #d4af37;
+  border-radius: 50px;
+  padding: 8px 16px;
+  font-size: 12px;
+  color: #d4af37;
+  z-index: 9998;
+  display: none;
+}
+.music-indicator.active {
+  display: block;
+}
+.music-indicator::before {
+  content: "🎵 ";
+}
 </style>
 </head>
 
 <body>
 
+<!-- Music container (hidden) -->
+<div id="musicContainer" style="display:none;"></div>
+
+<!-- Music Indicator -->
+<div id="musicIndicator" class="music-indicator">Mon Amour شغالة</div>
+
 <header>
   <div class="container header-inner">
     <div class="logo-area">
-      <img src="logo-alkilani.png" alt="الكيلاني" class="logo-img">
+      <!-- اللوقو placeholder -->
+      <img src="https://via.placeholder.com/50x50/d4af37/000?text=AK" alt="الكيلاني" class="logo-img">
       <div class="logo-text-main">AL-KILANI REAL ESTATE</div>
     </div>
     <div>
@@ -402,19 +407,9 @@ footer {
       <input type="text" id="locationInput" placeholder="الموقع (مثال: القصور)">
     </div>
 
-    <!-- رفع الصورة -->
     <div class="field">
-      <label style="color:#d4af37;font-size:14px;margin-bottom:5px;display:block;">صورة العقار:</label>
-      <div class="file-upload">
-        <input type="file" id="imageFile" accept="image/*" onchange="previewImage(this)">
-        <div class="file-upload-label" id="fileLabel">
-          📷 اضغط لاختيار صورة أو اسحبها هنا
-        </div>
-      </div>
-      <img id="previewImg" class="preview-img">
-      <div class="progress-bar" id="progressBar">
-        <div class="progress-fill" id="progressFill"></div>
-      </div>
+      <label style="color:#d4af37;font-size:14px;margin-bottom:5px;display:block;">رابط صورة العقار:</label>
+      <input type="text" id="imageUrlInput" placeholder="https://example.com/image.jpg (اختياري)">
     </div>
 
     <div class="field">
@@ -469,7 +464,35 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-const storage = firebase.storage();
+
+/* ============================================
+   MUSIC - YouTube Embed بتشتغل عند أول تفاعل
+   ============================================ */
+let musicStarted = false;
+const musicIndicator = document.getElementById("musicIndicator");
+
+function startMusic() {
+  if (musicStarted) return;
+  musicStarted = true;
+
+  const iframe = document.createElement("iframe");
+  iframe.width = "0";
+  iframe.height = "0";
+  iframe.style.display = "none";
+  iframe.src = "https://www.youtube.com/embed/Mc67plTbs_E?autoplay=1&mute=0&loop=1&playlist=Mc67plTbs_E";
+  iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+  iframe.frameBorder = "0";
+  
+  document.getElementById("musicContainer").appendChild(iframe);
+  
+  musicIndicator.classList.add("active");
+  showToast("🎵 Mon Amour شغالة");
+}
+
+// أول تفاعل بأي مكان بالصفحة بيشغل الموسيقى
+document.addEventListener("click", startMusic, { once: true });
+document.addEventListener("scroll", startMusic, { once: true });
+document.addEventListener("touchstart", startMusic, { once: true });
 
 /* ============================================
    DOM ELEMENTS
@@ -606,62 +629,10 @@ function showSection(type) {
 }
 
 /* ============================================
-   IMAGE UPLOAD
-   ============================================ */
-let selectedFile = null;
-
-function previewImage(input) {
-  const file = input.files[0];
-  if (!file) return;
-
-  selectedFile = file;
-  const preview = document.getElementById("previewImg");
-  const label = document.getElementById("fileLabel");
-
-  const reader = new FileReader();
-  reader.onload = e => {
-    preview.src = e.target.result;
-    preview.style.display = "block";
-    label.textContent = "✅ تم اختيار: " + file.name;
-  };
-  reader.readAsDataURL(file);
-}
-
-async function uploadImage(file) {
-  if (!file) return null;
-
-  const fileName = Date.now() + "_" + file.name.replace(/[^a-zA-Z0-9.]/g, "_");
-  const ref = storage.ref("properties/" + fileName);
-
-  const uploadTask = ref.put(file);
-
-  return new Promise((resolve, reject) => {
-    uploadTask.on("state_changed",
-      snapshot => {
-        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        document.getElementById("progressBar").style.display = "block";
-        document.getElementById("progressFill").style.width = progress + "%";
-      },
-      error => {
-        console.error("Upload error:", error);
-        reject(error);
-      },
-      async () => {
-        const url = await uploadTask.snapshot.ref.getDownloadURL();
-        document.getElementById("progressBar").style.display = "none";
-        document.getElementById("progressFill").style.width = "0%";
-        resolve(url);
-      }
-    );
-  });
-}
-
-/* ============================================
    EDIT MODE
    ============================================ */
 let isEditing = false;
 let editingId = null;
-let oldImageUrl = "";
 
 function editProperty(id) {
   const p = propertiesList.find(x => x.id === id);
@@ -669,9 +640,7 @@ function editProperty(id) {
 
   isEditing = true;
   editingId = id;
-  oldImageUrl = p.imageUrl || "";
 
-  // Fill form
   document.getElementById("addPanelTitle").textContent = "تعديل العقار";
   document.getElementById("editPropertyId").value = id;
   document.getElementById("mainType").value = p.mainType;
@@ -680,26 +649,18 @@ function editProperty(id) {
   document.getElementById("titleInput").value = p.title || "";
   document.getElementById("priceInput").value = p.price || "";
   document.getElementById("locationInput").value = p.location || "";
+  document.getElementById("imageUrlInput").value = p.imageUrl || "";
   document.getElementById("descInput").value = p.desc || "";
-
-  // Show old image preview
-  if (p.imageUrl) {
-    document.getElementById("previewImg").src = p.imageUrl;
-    document.getElementById("previewImg").style.display = "block";
-    document.getElementById("fileLabel").textContent = "📷 اضغط لتغيير الصورة";
-  }
 
   document.getElementById("submitBtn").textContent = "حفظ التعديلات";
   document.getElementById("cancelEditBtn").style.display = "inline-block";
 
-  // Scroll to form
   addPanel.scrollIntoView({ behavior: "smooth" });
 }
 
 function cancelEdit() {
   isEditing = false;
   editingId = null;
-  oldImageUrl = "";
 
   document.getElementById("addPanelTitle").textContent = "إضافة عقار جديد";
   document.getElementById("editPropertyId").value = "";
@@ -708,11 +669,8 @@ function cancelEdit() {
   document.getElementById("titleInput").value = "";
   document.getElementById("priceInput").value = "";
   document.getElementById("locationInput").value = "";
+  document.getElementById("imageUrlInput").value = "";
   document.getElementById("descInput").value = "";
-  document.getElementById("imageFile").value = "";
-  document.getElementById("previewImg").style.display = "none";
-  document.getElementById("fileLabel").textContent = "📷 اضغط لاختيار صورة أو اسحبها هنا";
-  selectedFile = null;
 
   document.getElementById("submitBtn").textContent = "نشر العقار";
   document.getElementById("cancelEditBtn").style.display = "none";
@@ -734,6 +692,7 @@ async function handleAddProperty() {
   const desc = document.getElementById("descInput").value.trim();
   const price = document.getElementById("priceInput").value.trim();
   const location = document.getElementById("locationInput").value.trim();
+  const imageUrl = document.getElementById("imageUrlInput").value.trim();
   const mainTypeVal = document.getElementById("mainType").value;
   const subTypeVal = document.getElementById("subType").value;
 
@@ -744,14 +703,6 @@ async function handleAddProperty() {
   }
 
   try {
-    let imageUrl = oldImageUrl;
-
-    // Upload new image if selected
-    if (selectedFile) {
-      showToast("⏳ جاري رفع الصورة...");
-      imageUrl = await uploadImage(selectedFile);
-    }
-
     const propertyData = {
       title,
       desc,
@@ -764,26 +715,20 @@ async function handleAddProperty() {
     };
 
     if (isEditing && editingId) {
-      // Update existing
       await db.collection("properties").doc(editingId).update(propertyData);
       showToast("✅ تم تعديل العقار بنجاح!");
       cancelEdit();
     } else {
-      // Add new
       propertyData.views = 0;
       propertyData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
       await db.collection("properties").add(propertyData);
       showToast("✅ تمت إضافة العقار بنجاح!");
 
-      // Reset form
       document.getElementById("titleInput").value = "";
       document.getElementById("descInput").value = "";
       document.getElementById("priceInput").value = "";
       document.getElementById("locationInput").value = "";
-      document.getElementById("imageFile").value = "";
-      document.getElementById("previewImg").style.display = "none";
-      document.getElementById("fileLabel").textContent = "📷 اضغط لاختيار صورة أو اسحبها هنا";
-      selectedFile = null;
+      document.getElementById("imageUrlInput").value = "";
     }
 
     loadProperties();
@@ -859,6 +804,14 @@ function renderProperties() {
       `;
     }
 
+    // Contact buttons for each property
+    const contactButtons = `
+      <div class="contact-actions">
+        <a href="https://wa.me/963950509594?text=مرحباً، أنا مهتم بهذا العقار: ${encodeURIComponent(p.title || '')}" target="_blank" class="btn btn-small btn-whatsapp">💬 واتساب</a>
+        <a href="tel:+963980284744" class="btn btn-small btn-call">📞 اتصال</a>
+      </div>
+    `;
+
     card.innerHTML = `
       <img src="${imgSrc}" alt="صورة العقار" loading="lazy">
       <div class="card-title">${p.title || "بدون عنوان"}</div>
@@ -868,6 +821,7 @@ function renderProperties() {
         <span style="font-size:12px;color:#aaa;">المشاهدات: ${p.views || 0}</span>
         <button class="btn" onclick="showDetails('${p.id}')" style="padding:6px 14px;font-size:12px;">عرض التفاصيل</button>
       </div>
+      ${contactButtons}
       ${adminButtons}
     `;
 
@@ -909,6 +863,10 @@ async function showDetails(id) {
     <p><strong>المشاهدات:</strong> ${p.views}</p>
     <p style="margin-top:10px;"><strong>الوصف:</strong></p>
     <p>${p.desc || "لا يوجد وصف"}</p>
+    <div class="contact-actions" style="margin-top:15px;">
+      <a href="https://wa.me/963950509594?text=مرحباً، أنا مهتم بهذا العقار: ${encodeURIComponent(p.title || '')}" target="_blank" class="btn btn-whatsapp">💬 واتساب</a>
+      <a href="tel:+963980284744" class="btn btn-call">📞 اتصال</a>
+    </div>
     <button class="btn" style="margin-top:15px;" onclick="closeDetails()">إغلاق</button>
   `;
 
@@ -939,3 +897,4 @@ window.addEventListener("load", () => {
 
 </body>
 </html>
+
