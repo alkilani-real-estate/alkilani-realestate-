@@ -12,22 +12,39 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
 
+/* خلفية الصفحة الكاملة */
 body {
   margin: 0;
   font-family: "Cairo", sans-serif;
-  background: #000;
   color: #fff;
+  min-height: 100vh;
+  position: relative;
 }
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: 
+    linear-gradient(rgba(10, 15, 26, 0.82), rgba(10, 15, 26, 0.92)),
+    url('https://res.cloudinary.com/ag5ikm6r/image/upload/v1782862102/image_1782862014712_eqwl1k.jpg') 
+    center/cover no-repeat;
+  z-index: -1;
+}
+
 .container {
   max-width: 1100px;
   margin: 0 auto;
   padding: 16px;
 }
+
 header {
-  background: #000;
-  border-bottom: 1px solid #333;
+  background: rgba(0, 0, 0, 0.4);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
   padding: 15px 0;
+  backdrop-filter: blur(8px);
 }
+
 .header-inner {
   display: flex;
   justify-content: space-between;
@@ -35,28 +52,34 @@ header {
   flex-wrap: wrap;
   gap: 10px;
 }
+
 .logo-area {
   display: flex;
   align-items: center;
   gap: 12px;
 }
+
 .logo-img {
-  width: 50px;
-  height: 50px;
+  width: 55px;
+  height: 55px;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid #d4af37;
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
 }
+
 .logo-text-main {
   font-size: 22px;
   font-weight: 800;
   color: #d4af37;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.8);
 }
+
 .btn {
   padding: 10px 20px;
   border-radius: 50px;
   border: 1px solid #d4af37;
-  background: transparent;
+  background: rgba(0, 0, 0, 0.4);
   color: #d4af37;
   cursor: pointer;
   font-family: "Cairo", sans-serif;
@@ -65,60 +88,90 @@ header {
   text-decoration: none;
   display: inline-block;
   text-align: center;
+  backdrop-filter: blur(4px);
 }
+
 .btn:hover {
   background: #d4af37;
   color: #000;
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
 }
+
 .btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
 .btn-danger {
   border-color: #e74c3c;
   color: #e74c3c;
 }
+
 .btn-danger:hover {
   background: #e74c3c;
   color: #fff;
 }
+
 .btn-small {
   padding: 5px 12px;
   font-size: 12px;
 }
+
 .btn-whatsapp {
   border-color: #25d366;
   color: #25d366;
 }
+
 .btn-whatsapp:hover {
   background: #25d366;
   color: #fff;
 }
+
 .btn-call {
   border-color: #3498db;
   color: #3498db;
 }
+
 .btn-call:hover {
   background: #3498db;
   color: #fff;
 }
+
 .hero {
   text-align: center;
-  padding: 30px 0;
+  padding: 50px 0;
 }
+
+.hero h2 {
+  color: #d4af37;
+  font-size: 32px;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+  margin-bottom: 25px;
+}
+
 .cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 15px;
 }
+
 .card {
-  background: #111;
-  border: 1px solid #333;
+  background: rgba(17, 17, 17, 0.85);
+  border: 1px solid rgba(212, 175, 55, 0.2);
   padding: 15px;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
+  backdrop-filter: blur(8px);
+  transition: 0.3s;
 }
+
+.card:hover {
+  border-color: rgba(212, 175, 55, 0.5);
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
+  transform: translateY(-3px);
+}
+
 .card img {
   width: 100%;
   border-radius: 8px;
@@ -126,66 +179,79 @@ header {
   max-height: 180px;
   object-fit: cover;
 }
+
 .card-title {
   font-size: 17px;
   font-weight: bold;
   color: #d4af37;
 }
+
 .card-meta {
   font-size: 13px;
   color: #ccc;
   margin-bottom: 3px;
 }
+
 .card-footer {
   margin-top: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+
 .card-actions {
   display: flex;
   gap: 5px;
   margin-top: 8px;
   flex-wrap: wrap;
 }
+
 .contact-actions {
   display: flex;
   gap: 5px;
   margin-top: 8px;
 }
+
 .panel {
-  background: #111;
-  border: 1px solid #333;
+  background: rgba(17, 17, 17, 0.9);
+  border: 1px solid rgba(212, 175, 55, 0.2);
   padding: 20px;
   border-radius: 10px;
   margin-bottom: 20px;
+  backdrop-filter: blur(8px);
 }
+
 .field {
   margin-bottom: 15px;
 }
+
 .field input,
 .field select,
 .field textarea {
   width: 100%;
   padding: 10px;
   border-radius: 8px;
-  border: 1px solid #444;
-  background: #000;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  background: rgba(0, 0, 0, 0.5);
   color: #fff;
   font-family: "Cairo", sans-serif;
   font-size: 14px;
   box-sizing: border-box;
 }
+
 .field textarea {
   min-height: 70px;
   resize: vertical;
 }
+
 footer {
   text-align: center;
   padding: 20px;
   color: #777;
-  border-top: 1px solid #222;
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
   margin-top: 30px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
 }
 
 /* أزرار التواصل الرئيسية */
@@ -195,11 +261,12 @@ footer {
   justify-content: center;
   gap: 14px;
 }
+
 .contact-icon-btn {
   width: 45px;
   height: 45px;
   border-radius: 50%;
-  background: #000;
+  background: rgba(0, 0, 0, 0.4);
   border: 2px solid #d4af37;
   display: flex;
   justify-content: center;
@@ -207,18 +274,22 @@ footer {
   transition: 0.25s;
   box-shadow: 0 0 8px rgba(212,175,55,0.25);
   text-decoration: none;
+  backdrop-filter: blur(4px);
 }
+
 .contact-icon-btn:hover {
   background: #d4af37;
-  box-shadow: 0 0 12px #d4af37;
+  box-shadow: 0 0 15px #d4af37;
   transform: translateY(-2px);
 }
+
 .contact-icon-btn svg {
   width: 24px;
   height: 24px;
   fill: #d4af37;
   transition: 0.25s;
 }
+
 .contact-icon-btn:hover svg {
   fill: #000;
 }
@@ -230,19 +301,23 @@ footer {
   gap: 8px;
   margin-bottom: 15px;
 }
+
 .subcat-chip {
   padding: 6px 12px;
   border-radius: 999px;
-  border: 1px solid #444;
+  border: 1px solid rgba(212, 175, 55, 0.3);
   font-size: 13px;
   color: #ddd;
   cursor: pointer;
   transition: 0.2s;
+  background: rgba(0, 0, 0, 0.3);
 }
+
 .subcat-chip:hover {
   background: #d4af37;
   color: #000;
 }
+
 .subcat-chip.active {
   background: #d4af37;
   color: #000;
@@ -260,8 +335,9 @@ footer {
   align-items: center;
   z-index: 9999;
 }
+
 #detailsContent {
-  background: #111;
+  background: rgba(17, 17, 17, 0.95);
   border: 1px solid #d4af37;
   padding: 20px;
   width: 85%;
@@ -269,7 +345,9 @@ footer {
   max-height: 90vh;
   overflow-y: auto;
   border-radius: 10px;
+  backdrop-filter: blur(8px);
 }
+
 #detailsContent img {
   width: 100%;
   border-radius: 8px;
@@ -294,6 +372,7 @@ footer {
   transition: opacity 0.3s;
   pointer-events: none;
 }
+
 .toast.show {
   opacity: 1;
 }
@@ -311,10 +390,13 @@ footer {
   color: #d4af37;
   z-index: 9998;
   display: none;
+  backdrop-filter: blur(4px);
 }
+
 .music-indicator.active {
   display: block;
 }
+
 .music-indicator::before {
   content: "🎵 ";
 }
@@ -323,8 +405,10 @@ footer {
 
 <body>
 
-<!-- Music container (hidden) -->
-<div id="musicContainer" style="display:none;"></div>
+<!-- Audio element for background music -->
+<audio id="bgMusic" loop preload="auto">
+  <source src="https://res.cloudinary.com/ag5ikm6r/video/upload/v1782860736/Mon_amour_-_Music_guitar_256k_czddsf.mp3" type="audio/mpeg">
+</audio>
 
 <!-- Music Indicator -->
 <div id="musicIndicator" class="music-indicator">Mon Amour شغالة</div>
@@ -332,8 +416,8 @@ footer {
 <header>
   <div class="container header-inner">
     <div class="logo-area">
-      <!-- اللوقو placeholder -->
-      <img src="https://via.placeholder.com/50x50/d4af37/000?text=AK" alt="الكيلاني" class="logo-img">
+      <!-- اللوقو من Cloudinary -->
+      <img src="https://res.cloudinary.com/ag5ikm6r/image/upload/f_auto,q_auto/1001062153_szdwon" alt="الكيلاني للعقارات" class="logo-img">
       <div class="logo-text-main">AL-KILANI REAL ESTATE</div>
     </div>
     <div>
@@ -346,7 +430,7 @@ footer {
 <main class="container">
 
   <section class="hero">
-    <h2 style="color:#d4af37;">مرحباً بك في الكيلاني للعقارات</h2>
+    <h2>مرحباً بك في الكيلاني للعقارات</h2>
 
     <button class="btn" onclick="showSection('sale')">عقارات للبيع</button>
     <button class="btn" onclick="showSection('rent')">عقارات للإيجار</button>
@@ -466,7 +550,7 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 /* ============================================
-   MUSIC - YouTube Embed بتشتغل عند أول تفاعل
+   MUSIC - Cloudinary MP3
    ============================================ */
 let musicStarted = false;
 const musicIndicator = document.getElementById("musicIndicator");
@@ -475,21 +559,17 @@ function startMusic() {
   if (musicStarted) return;
   musicStarted = true;
 
-  const iframe = document.createElement("iframe");
-  iframe.width = "0";
-  iframe.height = "0";
-  iframe.style.display = "none";
-  iframe.src = "https://www.youtube.com/embed/Mc67plTbs_E?autoplay=1&mute=0&loop=1&playlist=Mc67plTbs_E";
-  iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-  iframe.frameBorder = "0";
-  
-  document.getElementById("musicContainer").appendChild(iframe);
-  
+  const audio = document.getElementById("bgMusic");
+  audio.volume = 0.3;
+  audio.play().catch(e => {
+    console.log("Audio blocked:", e);
+    musicStarted = false;
+  });
+
   musicIndicator.classList.add("active");
   showToast("🎵 Mon Amour شغالة");
 }
 
-// أول تفاعل بأي مكان بالصفحة بيشغل الموسيقى
 document.addEventListener("click", startMusic, { once: true });
 document.addEventListener("scroll", startMusic, { once: true });
 document.addEventListener("touchstart", startMusic, { once: true });
@@ -793,7 +873,6 @@ function renderProperties() {
       ? p.imageUrl
       : "https://via.placeholder.com/400x250?text=AL-KILANI";
 
-    // Admin buttons
     let adminButtons = "";
     if (isLoggedIn) {
       adminButtons = `
@@ -804,7 +883,6 @@ function renderProperties() {
       `;
     }
 
-    // Contact buttons for each property
     const contactButtons = `
       <div class="contact-actions">
         <a href="https://wa.me/963950509594?text=مرحباً، أنا مهتم بهذا العقار: ${encodeURIComponent(p.title || '')}" target="_blank" class="btn btn-small btn-whatsapp">💬 واتساب</a>
